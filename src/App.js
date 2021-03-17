@@ -1,27 +1,36 @@
 
-import React, { Component } from 'react'
+import React from 'react'
 import './App.css';
 import PlayerList from './Components/PlayerList';
 import SearchBar from './Components/SearchBar';
-import axios from 'axios';
+import api from './api/api';
 
 
 class App extends React.Component {
+  state = {
+    players: [],
+  };
 
-  // onSearchSubmit(term){
-  //   console.log(term);
-  //   // axios.get(`https://api.npoint.io/d6bd0efc05639084eb17/`,{
-  //   //   params: {
-  //   //     query: term
-  //   //   }
-  //   // })
-  // }
+  onSearchSubmit = async (term) =>{
+    console.log(term);
+    const response = await api.get('/playerList',{
+      params: {
+        query: term
+      }
+    })
+    // console.log(response.data);
+    this.setState({players: response.data})
+  }
   
   render() {
     return (
       <div className="App">
-        {/* <SearchBar onSubmit={this.onSearchSubmit} /> */}
-        <PlayerList />
+        <SearchBar onSubmit={this.onSearchSubmit} />
+        <div className="container py-5">
+          <div className="row">
+          <PlayerList players = {this.state.players} />
+          </div>
+        </div>
       </div>
     );
   }
